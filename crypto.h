@@ -77,3 +77,88 @@ bool prim(int n)
 			return 0;
 	return 1;
 }
+
+
+
+
+
+
+
+char alfabet[100] = { 0 };
+int N = 0;
+
+int da_cod(char c)
+{
+	for (int i = 0; i < N; ++i)
+		if (alfabet[i] == c)
+			return i;
+	return -1;
+}
+
+
+char da_caracter(int cod)
+{
+	return alfabet[modulo(cod, N)];
+}
+
+
+void citeste_alfabet(ifstream in)
+{
+	char c;
+	while (in >> noskipws >> c)
+	{
+		alfabet[N++] = c;
+	}
+	if (N == 0)
+		cout << "Alfabetul dat are 0 caractere" << endl;
+}
+
+
+void criptareCezar(ifstream& in, ofstream out, int k)
+{
+	char c;
+	while (in >> noskipws >> c)
+	{
+		out << da_caracter(da_cod(c) + k);
+	}
+}
+
+
+
+
+
+
+
+struct caracter
+{
+	char c;
+	int f;
+};
+
+
+caracter* frecvente(ifstream& in)
+{
+	caracter vector_frecvente[100] = { 0 };
+	char c;
+	while (in >> noskipws >> c)
+	{
+		vector_frecvente[da_cod(c)].c = c;
+		vector_frecvente[da_cod(c)].f++;
+	}
+	bool ordonat = 0;
+	while (!ordonat)
+	{
+		ordonat = 1;
+		for (int i = 0; i < N - 1; i++)
+		{
+			if (vector_frecvente[i].f < vector_frecvente[i + 1].f)
+			{
+				ordonat = 0;
+				caracter temp = vector_frecvente[i];
+				vector_frecvente[i] = vector_frecvente[i + 1];
+				vector_frecvente[i + 1] = temp;
+			}
+		}
+	}
+	return vector_frecvente;
+}
